@@ -1,0 +1,100 @@
+
+* {
+  padding: 0.1em;
+	box-sizing: border-box;
+}
+
+figure {
+  text-align: center;
+}
+
+figcaption {
+  text-align: center;
+  font-size: 1em;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  text-transform: lowercase;
+}
+
+.logo {
+  text-align: left;
+  color: #02b3e4;
+  font-size: 5em;
+  text-shadow: 2px 2px #7d97ad;
+  font-family: 'Alex Brush', cursive;
+  font-weight: bold;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+}
+
+.feature-img {
+  width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: space-around;
+}
+
+.features {
+  display: flex;
+  justify-content: center;
+}
+
+.main-img {
+  width: 100%;
+}
+
+.header-main {
+  display: flex;
+  height: 200px;
+}
+
+.container {
+	display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.header-title {
+	width: 100%;
+	text-align: right;
+  font-weight: 300;
+  font-size: 4em;
+  color: #2d3c49;
+}
+
+.header-subtitle {
+  text-align: right;
+  width: 100%;
+  font-weight: 300;
+  font-size: 1.5em;
+  margin: 0.25em 0.0em;
+  color: #2d3c49;
+  border-bottom: 2px solid #7d97ad;
+}
+
+.break-line {
+
+  margin: 15px;
+}
+
+  @media screen and (max-width:500px) {
+    .features {
+      flex-wrap: wrap;
+    }
+
+    .feature-img {
+      width: 60%;
+    }
+
+    .logo {
+      display: none;
+    }
+
+    .header-main {
+      height: 50%;
+    }
+
+    .header-title {
+      margin: 0.25em 0.0em;
+    }
+  }
