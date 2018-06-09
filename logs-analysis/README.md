@@ -12,4 +12,4 @@ This is a simple python application for producing the following set of reports f
 
 <br>
 
-**Author** Anne Hough
+**Author:** Anne Hough
