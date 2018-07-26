@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>{{ category.name }}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Free HTML5 Website Template by FreeHTML5.co" />
+	<meta name="keywords" content="free website templates, free html5, free template, free bootstrap, free website template, html5, css3, mobile first, responsive" />
+	<meta name="author" content="FreeHTML5.co" />
+
+	<!--
+	//////////////////////////////////////////////////////
+
+	FREE HTML5 TEMPLATE
+	DESIGNED & DEVELOPED by FreeHTML5.co
+
+	Website: 		http://freehtml5.co/
+	Email: 			info@freehtml5.co
+	Twitter: 		http://twitter.com/fh5co
+	Facebook: 		https://www.facebook.com/fh5co
+
+	//////////////////////////////////////////////////////
+	 -->
+
+
+	<!-- Animate.css -->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/animate.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/icomoon.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+	<!-- Modernizr JS -->
+	<script src="{{ url_for('static', filename="js/modernizr-2.6.2.min.js")}}"></script>
+
+
+	</head>
+	<body>
+
+	<div class="fh5co-loader"></div>
+
+	<div id="page">
+	<nav class="fh5co-nav" role="navigation">
+		<div class="container">
+			<div class="fh5co-top-logo">
+				<div id="fh5co-logo"><a href='{{url_for('catalogCategories') }}'>Back To Catalog</a></div>
+			</div>
+			<div class="fh5co-top-menu menu-1 text-right">
+				{% if session['username'] %}
+					<span>You are logged in as {{ session['username'] }}</span>
+      				<a href="{{ url_for('logout') }}">Log Out</a>
+      			{% endif %}
+			</div>
+			<div class="fh5co-top-menu menu-1 text-center">
+			</div>
+			<div class="fh5co-top-social menu-1 text-right">
+			</div>
+		</div>
+	</nav>
+
+	<div id="fh5co-author">
+		<div class="container">
+			<div class="row top-line animate-box">
+				<div class="col-md-6 col-md-offset-3 col-md-push-2 text-left">
+					<!-- Show the category and category description and then display all items in the category-->
+					<h2>{{ category.name }}</h2>
+					<h3>{{ category.description }}</h3>
+
+
+					{% for i in items %}
+						<br>
+						<p>Item: {{i.name}}</p>
+						<p>Description: {{i.description}}</p>
+
+						<!-- If the user is authenticated AND is ther user that originally created the item, then allow them to edit or delete the item-->
+						{% if session['username'] and session['gplus_id'] == i.created_by_user %}
+							<a class="btn btn-primary btn-outline" href='{{ url_for('editItem', category_name=category.name, item_id=i.id) }}'>Edit</a>
+							<a class="btn btn-primary btn-outline" href='{{ url_for('deleteItem', category_name=category.name, item_id=i.id) }}'>Delete</a>
+						{% endif %}
+
+
+					{% endfor %}
+					</div>
+				</div>
+				<div class="col-md-6 col-md-offset-3 col-md-push-2 text-left">
+
+					<!-- If the user is authenticated then allow them to create new items-->
+					{% if session['username'] %}
+						<a href='{{ url_for('newItem', category_name=category.name) }}' class="btn btn-primary btn-outline"></i> Add Item </a>
+					{% endif %}
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div id="fh5co-started">
+		<div class="container">
+			<div class="row animate-box">
+				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer id="fh5co-footer" role="contentinfo">
+		<div class="container">
+			<div class="row copyright">
+				<div class="col-md-12 text-center">
+					<p>
+						<small class="block">&copy; 2016 Free HTML5. All Rights Reserved.</small>
+						<small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FreeHTML5.co</a> Demo Images: <a href="http://unsplash.co/" target="_blank">Unsplash</a> &amp; <a href="http://blog.gessato.com/" target="_blank">Gessato</a></small>
+					</p>
+
+				</div>
+			</div>
+
+		</div>
+	</footer>
+	</div>
+
+	<div class="gototop js-top">
+		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
+	</div>
+
+	<script src="{{ url_for('static', filename="js/jquery.min.js")}}"></script>
+	<!-- jQuery Easing -->
+	<script src="{{ url_for('static', filename="js/jquery.easing.1.3.js")}}"></script>
+	<!-- Bootstrap -->
+	<script src="{{ url_for('static', filename="js/bootstrap.min.js")}}"></script>
+	<!-- Waypoints -->
+	<script src="{{ url_for('static', filename="js/jquery.waypoints.min.js")}}"></script>
+	<!-- Main -->
+	<script src="{{ url_for('static', filename="js/main.js")}}"></script>
+
+	</body>
+</html>
+
