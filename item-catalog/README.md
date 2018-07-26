@@ -9,7 +9,7 @@ This is a web server catalog application with a sqllite database back-end with t
 
 1. Before running the  program ensure that you have Python installed
 2. Ensure that you have a created database.  You can either use the catalog.db file included in this package or you can perform the following steps to create your own database.
-	a.  Run `python database_setup.py`
+	a.  Run `python database_setup.py`<br>
 	b.  Run `python database_populate.py`
 3. There are no parameters required used to run the program.  Simply type `python catalog.py`
 4.  In your browser navigate to localhost:5000/ or loalhost:5000/catalog/
