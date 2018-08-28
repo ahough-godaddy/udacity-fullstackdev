@@ -13,8 +13,8 @@ Base = declarative_base()
 class Category(Base):
     __tablename__ = 'category'
    
-    id = Column(Integer, primary_key=True)
-    name = Column(String(80), nullable=False)
+    id = Column(Integer, primary_key=True, unique=True)
+    name = Column(String(80), nullable=False, unique=True)
     description = Column(String(250))
 
 
@@ -24,11 +24,11 @@ class Item(Base):
 
 
     name =Column(String(80), nullable = False)
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key = True, unique=True)
     description = Column(String(250))
     date_added = Column(DateTime(), default=datetime.utcnow)
     created_by_user = Column(String(30), nullable=False)
-    category_name = Column(String(80),ForeignKey('category.name'))
+    category_id = Column(Integer,ForeignKey('category.id'))
     category = relationship(Category)
     
      
@@ -42,7 +42,7 @@ class Item(Base):
            'id'         : self.id,
            'description'         : self.description,
            'date_added'     : self.date_added,
-           'category_name'        : self.category_name,
+           'category_id'        : self.category_id,
            'created_by_user'   : self.created_by_user
        }
  

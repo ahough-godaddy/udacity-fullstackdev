@@ -52,10 +52,9 @@ def catalogCategories():
 
 @app.route('/catalog/<string:category_name>/')
 def getCategoryItems(category_name):
-    #Get and display all of the items in the specified category
-	print("Searching for category %s"  % (category_name)) 
+    #Get and display all of the items in the specified category 
 	category = session.query(Category).filter_by(name = category_name).one()
-	items = session.query(Item).filter_by(category_name = category_name).all()
+	items = session.query(Item).filter_by(category_id = category.id).all()
 
 	return render_template('category_description.html', category=category, items=items)
 
@@ -66,8 +65,11 @@ def getCategoryItems(category_name):
 def newItem(category_name):
     #On GET request display a form for users to add new items
     if request.method == 'GET':
-        categories = session.query(Category).all()
-        return render_template('add.html', category_name=category_name, categories=categories)
+        if login_session.get('access_token') is not None:
+            categories = session.query(Category).all()
+            return render_template('add.html', category_name=category_name, categories=categories)
+        else:
+             return  redirect(url_for('login'))
 
     #On POST request/form submit, save the new Item information to the database
     if request.method == 'POST':
@@ -79,7 +81,8 @@ def newItem(category_name):
 
         #If an Item name wasn't provided, don't create the item
         if name:
-            new_item = Item(name = name, description = description, category_name = category_name, created_by_user = created_by_user)
+            category = session.query(Category).filter_by(name = category_name).one()
+            new_item = Item(name = name, description = description, category_id = category.id, created_by_user = created_by_user)
             session.add(new_item)
             session.commit()
 
@@ -87,14 +90,17 @@ def newItem(category_name):
             return redirect(url_for('getCategoryItems', category_name=category_name))  
 
 
-@app.route('/catalog/<string:category_name>/<string:item_id>/edit', methods = ['GET', 'POST'])
+@app.route('/catalog/<string:category_name>/<path:item_id>/edit', methods = ['GET', 'POST'])
 def editItem(category_name, item_id):
     category = session.query(Category).filter_by(name = category_name).one()
     item = session.query(Item).filter_by(id = item_id).one()
 
     #On GET request display a form for users to edit an existing item
     if request.method == 'GET':
-        return render_template('edit.html', category=category, item=item)
+        if login_session.get('access_token') is not None:
+            return render_template('edit.html', category=category, item=item)
+        else:
+             return  redirect(url_for('login'))
 
     #On POST request/form submit, update the Item information in the database
     elif request.method == 'POST':
@@ -112,14 +118,17 @@ def editItem(category_name, item_id):
         return redirect(url_for('getCategoryItems', category_name=category_name))    
 	
 
-@app.route('/catalog/<string:category_name>/<string:item_id>/delete')
+@app.route('/catalog/<string:category_name>/<path:item_id>/delete')
 def deleteItem(category_name, item_id):
     #Delete an item fromt he database
-    item = session.query(Item).filter_by(id = item_id).one()
-    if item != []:
-        session.delete(item)
-        session.commit()
-	return redirect(url_for('getCategoryItems', category_name=category_name)) 
+    if login_session.get('access_token') is not None:
+        item = session.query(Item).filter_by(id = item_id).one()
+        if item != []:
+            session.delete(item)
+            session.commit()
+    	return redirect(url_for('getCategoryItems', category_name=category_name))
+    else:
+        return  redirect(url_for('login'))
 	
 
 
