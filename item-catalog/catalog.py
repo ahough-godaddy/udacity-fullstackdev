@@ -169,6 +169,7 @@ def logout():
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Get an authorization code and then swap it for credentials
+    # Code obtained from Udacity course examples
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
