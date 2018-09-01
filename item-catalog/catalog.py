@@ -1,17 +1,18 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, make_response
+from flask import Flask, render_template, request, redirect, url_for
+from flask import jsonify, make_response
 from flask import session as login_session
-app = Flask(__name__)
-
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item
-
-import random, string
+import random
+import string
 import requests
 import json
 import httplib2
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
+
+app = Flask(__name__)
 
 
 client_id = json.loads(
@@ -27,51 +28,48 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-
 @app.before_first_request
-def clearSession(): 
-	login_session.clear()
+def clearSession():
+    login_session.clear()
+
 
 @app.route('/catalog/<string:category_name>/catalog.json')
 def catalogItemsJSON(category_name):
-	#Endpoint to request serialized Item information
-	items = session.query(Item).filter_by(category_name = category_name).all()
+    # Endpoint to request serialized Item information
+    items = session.query(Item).filter_by(category_name=category_name).all()
 
-	return jsonify(Item=[i.serialize for i in items])
-
+    return jsonify(Item=[i.serialize for i in items])
 
 
 @app.route('/')
 @app.route('/catalog/')
 def catalogCategories():
-	#Show categories and list of latest added items
-	latest_items = session.query(Item).order_by(desc(Item.date_added)).limit(5).all()
+    # Show categories and list of latest added items
+    latest_items = session.query(Item).order_by(desc(Item.date_added)).limit(5).all()
 
-	return render_template('index.html', latest_items=latest_items)
+    return render_template('index.html', latest_items=latest_items)
 
 
 @app.route('/catalog/<string:category_name>/')
 def getCategoryItems(category_name):
-    #Get and display all of the items in the specified category 
-	category = session.query(Category).filter_by(name = category_name).one()
-	items = session.query(Item).filter_by(category_id = category.id).all()
+    # Get and display all of the items in the specified category
+    category = session.query(Category).filter_by(name=category_name).one()
+    items = session.query(Item).filter_by(category_id=category.id).all()
 
-	return render_template('category_description.html', category=category, items=items)
-
-
+    return render_template('category_description.html', category=category, items=items)
 
 
-@app.route('/catalog/<string:category_name>/new/', methods=['GET','POST'])
+@app.route('/catalog/<string:category_name>/new/', methods=['GET', 'POST'])
 def newItem(category_name):
-    #On GET request display a form for users to add new items
+    # On GET request display a form for users to add new items
     if request.method == 'GET':
         if login_session.get('access_token') is not None:
             categories = session.query(Category).all()
             return render_template('add.html', category_name=category_name, categories=categories)
         else:
-             return  redirect(url_for('login'))
+            return redirect(url_for('login'))
 
-    #On POST request/form submit, save the new Item information to the database
+    # On POST request/form submit, save the new Item information to the database
     if request.method == 'POST':
         description = request.form['description']
         name = request.form['name']
@@ -79,30 +77,30 @@ def newItem(category_name):
         created_by_user = login_session['gplus_id']
         print 'Adding new item: %s', name
 
-        #If an Item name wasn't provided, don't create the item
+        # If an Item name wasn't provided, don't create the item
         if name:
-            category = session.query(Category).filter_by(name = category_name).one()
-            new_item = Item(name = name, description = description, category_id = category.id, created_by_user = created_by_user)
+            category = session.query(Category).filter_by(name=category_name).one()
+            new_item = Item(name=name, description=description, category_id=category.id, created_by_user=created_by_user)
             session.add(new_item)
             session.commit()
 
-            #After creating item redirect to the Category page so the user can see the item that they just added
-            return redirect(url_for('getCategoryItems', category_name=category_name))  
+            # After creating item redirect to the Category page so the user can see the item that they just added
+            return redirect(url_for('getCategoryItems', category_name=category_name))
 
 
-@app.route('/catalog/<string:category_name>/<path:item_id>/edit', methods = ['GET', 'POST'])
+@app.route('/catalog/<string:category_name>/<string:item_id>/edit', methods=['GET', 'POST'])
 def editItem(category_name, item_id):
-    category = session.query(Category).filter_by(name = category_name).one()
-    item = session.query(Item).filter_by(id = item_id).one()
+    category = session.query(Category).filter_by(name=category_name).one()
+    item = session.query(Item).filter_by(id=item_id).one()
 
-    #On GET request display a form for users to edit an existing item
+    # On GET request display a form for users to edit an existing item
     if request.method == 'GET':
         if login_session.get('access_token') is not None:
             return render_template('edit.html', category=category, item=item)
         else:
-             return  redirect(url_for('login'))
+            return redirect(url_for('login'))
 
-    #On POST request/form submit, update the Item information in the database
+    # On POST request/form submit, update the Item information in the database
     elif request.method == 'POST':
         description = request.form['description']
         name = request.form['name']
@@ -114,31 +112,31 @@ def editItem(category_name, item_id):
             session.add(item)
             session.commit()
 
-        #After updating an item redirect to the Category page so the user can see the updated information
-        return redirect(url_for('getCategoryItems', category_name=category_name))    
-	
+        # After updating an item redirect to the Category page so the user can see the updated information
+        return redirect(url_for('getCategoryItems', category_name=category_name))
 
-@app.route('/catalog/<string:category_name>/<path:item_id>/delete')
+
+@app.route('/catalog/<string:category_name>/<string:item_id>/delete')
 def deleteItem(category_name, item_id):
-    #Delete an item fromt he database
+    # Delete an item fromt he database
     if login_session.get('access_token') is not None:
-        item = session.query(Item).filter_by(id = item_id).one()
+        item = session.query(Item).filter_by(id=item_id).one()
         if item != []:
             session.delete(item)
             session.commit()
-    	return redirect(url_for('getCategoryItems', category_name=category_name))
+            return redirect(url_for('getCategoryItems', category_name=category_name))
     else:
-        return  redirect(url_for('login'))
-	
+        return redirect(url_for('login'))
 
 
-@app.route('/login/', methods = ['GET','POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
-    #Display the login page passing in state and google client id
-	state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
-	login_session['state'] = state
-	
-	return render_template('login.html', state=state, client_id=client_id)
+    # Display the login page passing in state and google client id
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    login_session['state'] = state
+
+    return render_template('login.html', state=state, client_id=client_id)
+
 
 @app.route('/catalog/logout/')
 def logout():
@@ -150,11 +148,10 @@ def logout():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    #Revoke the one-time use token so user is no longer authenticated
+    # Revoke the one-time use token so user is no longer authenticated
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    
 
     if result['status'] == '200':
         login_session.clear()
@@ -162,14 +159,13 @@ def logout():
         response = make_response(json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
-    
+
     return redirect(url_for('catalogCategories'))
 
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Get an authorization code and then swap it for credentials
-    # Code obtained from Udacity course examples
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -193,7 +189,7 @@ def gconnect():
            % access_token)
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
-    
+
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
         response.headers['Content-Type'] = 'application/json'
@@ -241,7 +237,6 @@ def gconnect():
     return redirect(url_for('catalogCategories'))
 
 
-
 if __name__ == '__main__':
-	app.debug = True
-	app.run(host = '0.0.0.0', port = 5000)
+    app.debug = True
+    app.run(host='0.0.0.0', port=5000)
