@@ -6,6 +6,26 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
+    <div id="list">
+        <form data-bind="submit: filterPlaces">
+            Filter By:
+            <input data-bind='value: filterCriteria, valueUpdate: "afterkeydown", textInput: filter' />
+            <button type="submit" data-bind="enable: filterCriteria().length > 0">Filter</button>
+            <p>Your items:</p>
+            <select multiple="multiple" width="50" data-bind="options: allPlaces, optionsText: function(item) {
+                                return item.name
+                            }"> </select>
+        </form>
+        <h3>Click one of the following locations to see more information:</h3>
+        <p>
+        <select data-bind="options: allPlaces,
+                            optionsText: function(item) {
+                                return item.name
+                            },
+                            selectedOptions: updatedPlaces"
+                            multiple="true"></select>
+        </p>
+    </div>
     <div id="map"></div>
 
 
