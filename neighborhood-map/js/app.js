@@ -4,6 +4,7 @@ Model -- could also load this from a server
 
 var map;
 var markers = [];
+var infoWindows = [];
 var $mapElem = $('#map');
 
 var model = {
@@ -195,6 +196,7 @@ var markersListViewModel = function() {
        
         if (!filterCriteria || filterCriteria == "None") {
         	markersView.resetMarkers();
+        	showInfoWindow.resetInfoWindows();
             return self.allPlaces();
         } else {
             return ko.utils.arrayFilter(self.allPlaces(), function(place) {
@@ -277,12 +279,20 @@ var showInfoWindow = {
 			position: {lat: selectedPlace.latitude, lng: selectedPlace.longitude}
 			});
 
+			infoWindows.push(infowindow);
+
 			infowindow.open(map);
 
 	    }
 
 		
-	}
+	},
+
+	resetInfoWindows: function() {
+    	for (var i = 0; i < infoWindows.length; i++) {
+          	infoWindows[i].close(map);
+        }	
+    }
 
 }
 
