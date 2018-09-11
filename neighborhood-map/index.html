@@ -7,24 +7,16 @@
 </head>
 <body>
     <div id="list">
+        <h3>Filter the locations shown on the map:</h3>
         <form data-bind="submit: filterPlaces">
             Filter By:
-            <input data-bind='value: filterCriteria, valueUpdate: "afterkeydown", textInput: filter' />
-            <button type="submit" data-bind="enable: filterCriteria().length > 0">Filter</button>
-            <p>Your items:</p>
-            <select multiple="multiple" width="50" data-bind="options: allPlaces, optionsText: function(item) {
-                                return item.name
-                            }"> </select>
+            <input data-bind='textInput: filterCriteria, valueUpdate: "afterkeydown"' />
         </form>
-        <h3>Click one of the following locations to see more information:</h3>
-        <p>
-        <select data-bind="options: allPlaces,
-                            optionsText: function(item) {
-                                return item.name
-                            },
-                            selectedOptions: updatedPlaces"
-                            multiple="true"></select>
-        </p>
+
+
+        <ul data-bind="foreach: filterPlaces">
+            <li data-bind="text: name, click: $parent.showListMarker"></li>
+        </ul>
     </div>
     <div id="map"></div>
 
@@ -34,4 +26,7 @@
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/app.js"></script>
 </body>
+<footer>
+    Location data provided via the  <a href="https://developer.foursquare.com/docs">Foursquare API</a>
+</footer>
 </html>
