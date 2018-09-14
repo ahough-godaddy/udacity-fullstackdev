@@ -1,12 +1,10 @@
-/*
-Model -- could also load this from a server
-*/
 
 var map;
 var markers = [];
 var infoWindows = [];
 var $mapElem = $('#map');
 
+//Create the model for the map locations
 var model = {
 	selectedPlace: null,
 	tahoePlaces: [
@@ -49,6 +47,7 @@ var model = {
 	]
 };
 
+// generic viewmodel for getting and setting data in the model
 var viewModel = {
 
 	init: function() {
@@ -98,11 +97,13 @@ var viewModel = {
 }
 
 
-
+// View to display them map
 var mapView = {
 
+	// This is the function that gets called once the libraries from the Google API have all been loaded
 	init: function() {
 
+		// Surface an alert to the user if the Google resources can't be loaded
 		var mapsTimeout = setTimeout(function() {
         	alert("Failed to load Google Maps resources within allowed timeframe");
     	}, 8000);
@@ -112,6 +113,7 @@ var mapView = {
               zoom: 12
             });
 
+		// If we successfully load the map then don't show the alert
 		if ( $mapElem.length ) {
 			clearTimeout(mapsTimeout);
 		}
@@ -131,6 +133,7 @@ var markersView = {
 
 	},
 
+	// Create markers for all locations that are "visible"
 	render: function() {
 		var parent = this;
 		this.clearMarkers(); 	
@@ -147,9 +150,11 @@ var markersView = {
 		      title: place.name
 		    });
 
+			// Set the marker for each location
 		    markers.push(marker);
 		    place.marker = marker;
 
+		    // Add a Click listener for each marker
 		    marker.addListener('click', (function(placeCopy) {
 		    	return function() {
 		    		viewModel.setSelectedPlace(placeCopy);
@@ -161,6 +166,7 @@ var markersView = {
 
 	},
 
+	// Logic to bounce a marker when clicked
 	toggleBounce: function(marker) {
 		var marker = viewModel.getSelectedPlace().marker;
 		
@@ -171,12 +177,14 @@ var markersView = {
 		}
 	},
 
+	// Clear all markers
 	clearMarkers: function() {
         for (var i = 0; i < markers.length; i++) {
           	markers[i].setMap(null);
         }
     }, 
 
+    // Reset the markers
     resetMarkers: function() {
     	for (var i = 0; i < markers.length; i++) {
           	markers[i].setMap(map);
@@ -185,12 +193,14 @@ var markersView = {
 
 }
 
+// Create Knockout observables to display the list of locations
 var markersListViewModel = function() {
 	self = this;
 
 	self.allPlaces = ko.observableArray(viewModel.getPlaces());
 	self.filterCriteria = ko.observable("");
 
+	// Filter the list based on what's specified in the input box
     self.filterPlaces = ko.computed(function() {
         var filterCriteria = self.filterCriteria();
        
@@ -213,6 +223,7 @@ var markersListViewModel = function() {
         }
     }, self);
 
+    // Show marker when a location in the list is clicked
     self.showListMarker = function(place) {
     	viewModel.setSelectedPlace(place);
     	markersView.toggleBounce();
@@ -225,6 +236,7 @@ var showInfoWindow = {
 	render: function() {
 		var selectedPlace = viewModel.getSelectedPlace();
 		
+		// Values for Foursquare API calls
 		var fsBaseUrl = "https://api.foursquare.com/v2/venues/search";
 		var fsKey = "YE2KDPKG4FJ2XBHEARA4HZ3C35MYPJYHNQV5EXWWK4WU0NL3";
 		var fsSecret = "OYFCVH4Y4ACV1LJ1EG4Z2VMCUB5LHL3CH1CNJQOLGEXIM2US";
@@ -234,6 +246,7 @@ var showInfoWindow = {
 
 		var matchedPlace;
 
+		// Create object for the payload to be sent to the Foursquare API
 		var searchData = {
   			ll: placeLatitude+','+placeLongitude,
   			name: placeName,
@@ -258,6 +271,7 @@ var showInfoWindow = {
 
 	        setInfoWindow(matchedPlace);
 	    })
+	    // On failure call method with an empty value
 	    .fail(function(e) {
 	    	setInfoWindow(matchedPlace);
 	    });
@@ -266,14 +280,16 @@ var showInfoWindow = {
 	    	var useDefault = true;
 	    	if(matchedPlace) useDefault = false;
 
+	    	// Set infoWindow details based upon what's available from API 
 	    	var infoPlaceName = matchedPlace.name ? matchedPlace.name : '';
 	    	var infoPlaceDesc = matchedPlace.categories[0].name ? matchedPlace.categories[0].name : '';
 	    	var infoPlaceAddress1 = matchedPlace.location.formattedAddress[0] ? matchedPlace.location.formattedAddress[0]  : '';
 	    	var infoPlaceAddress2 = matchedPlace.location.formattedAddress[1] ? matchedPlace.location.formattedAddress[1]  : '';
 
-
+	    	// If no data was retrieved or there was an error display a generic message; otherwise display location information
 	    	var infoContent = useDefault ? "Unable to retrieve details about the selected location" : (infoPlaceName + '\n' + infoPlaceDesc + '\n' + infoPlaceAddress1 + '\n' + infoPlaceAddress2);
 
+	    	// create infoWindow with content
 	    	var infowindow = new google.maps.InfoWindow({
 			content: infoContent,
 			position: {lat: selectedPlace.latitude, lng: selectedPlace.longitude}
@@ -288,6 +304,7 @@ var showInfoWindow = {
 		
 	},
 
+	// Close all infoWindows
 	resetInfoWindows: function() {
     	for (var i = 0; i < infoWindows.length; i++) {
           	infoWindows[i].close(map);

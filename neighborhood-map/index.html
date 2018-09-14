@@ -13,14 +13,14 @@
             <input data-bind='textInput: filterCriteria, valueUpdate: "afterkeydown"' />
         </form>
 
-
+        <!-- Show each place in the filtered list and set up click listener for each list item-->
         <ul data-bind="foreach: filterPlaces">
             <li data-bind="text: name, click: $parent.showListMarker"></li>
         </ul>
     </div>
     <div id="map"></div>
 
-
+    <!-- Call Google JS API -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrxuTZHChCdecUYGTXxzDLbaldkGwT5vU&v=3&callback=mapView.init"></script>
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
