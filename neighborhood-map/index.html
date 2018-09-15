@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Neighborhood Map</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
@@ -21,7 +22,7 @@
     <div id="map"></div>
 
     <!-- Call Google JS API -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrxuTZHChCdecUYGTXxzDLbaldkGwT5vU&v=3&callback=mapView.init"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrxuTZHChCdecUYGTXxzDLbaldkGwT5vU&v=3&callback=mapView.init" onerror="googleApiError()"></script>
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/app.js"></script>

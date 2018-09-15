@@ -4,6 +4,14 @@ var markers = [];
 var infoWindows = [];
 var $mapElem = $('#map');
 
+function googleApiError() {
+    alert('Error while loading Google Maps resources');
+}
+
+function gm_authFailure() {
+    alert('Error while authenticating Google Maps resources. Some features may be unavailable.');
+}
+
 //Create the model for the map locations
 var model = {
 	selectedPlace: null,
@@ -11,35 +19,35 @@ var model = {
 		{
 			name: 'Kings Beach State Park',
 			latitude: 39.2373090230458,
-			longitude: -120.02570039172623, 
+			longitude: -120.02570039172623,
 			marker: null,
 			visible: true
 		},
 		{
 			name: 'Gar Woods Grill & Pier',
 			latitude: 39.22533009440064,
-			longitude: -120.08348740823827, 
+			longitude: -120.08348740823827,
 			marker: null,
-			visible: true	
+			visible: true
 		},
 		{
 			name: 'Safeway',
 			latitude: 39.239526,
-			longitude: -120.034195, 
+			longitude: -120.034195,
 			marker: null,
-			visible: true	
+			visible: true
 		},
 		{
 			name: 'Tahoe Tree Top Adventures',
 			latitude: 39.15623036364202,
 			longitude: -120.15677618984724,
-			marker: null, 
+			marker: null,
 			visible: true
 		},
 		{
 			name: 'North Shore Parasail',
 			latitude: 39.236792036439276,
-			longitude: -120.02632119835995, 
+			longitude: -120.02632119835995,
 			marker: null,
 			visible: true
 		}
@@ -52,7 +60,7 @@ var viewModel = {
 
 	init: function() {
 
-		
+
 		markersView.init();
 
 	},
@@ -92,7 +100,7 @@ var viewModel = {
 	updateVisibility: function(place, isVisible) {
 		model.selectedPlace = place;
 		model.selectedPlace.visible = isVisible;
-		
+
 	}
 }
 
@@ -119,7 +127,7 @@ var mapView = {
 		}
 
 		viewModel.init();
-		
+
 	}
 
 
@@ -128,7 +136,7 @@ var mapView = {
 var markersView = {
 
 	init: function() {
-		
+
 		this.render();
 
 	},
@@ -136,7 +144,7 @@ var markersView = {
 	// Create markers for all locations that are "visible"
 	render: function() {
 		var parent = this;
-		this.clearMarkers(); 	
+		this.clearMarkers();
 		var places = viewModel.getVisiblePlaces();
 
 		for (i = 0; i < places.length; i++) {
@@ -169,7 +177,7 @@ var markersView = {
 	// Logic to bounce a marker when clicked
 	toggleBounce: function(marker) {
 		var marker = viewModel.getSelectedPlace().marker;
-		
+
 		if (marker.getAnimation() !== null) {
 			marker.setAnimation(null);
 		} else {
@@ -182,13 +190,13 @@ var markersView = {
         for (var i = 0; i < markers.length; i++) {
           	markers[i].setMap(null);
         }
-    }, 
+    },
 
     // Reset the markers
     resetMarkers: function() {
     	for (var i = 0; i < markers.length; i++) {
           	markers[i].setMap(map);
-        }	
+        }
     }
 
 }
@@ -203,7 +211,7 @@ var markersListViewModel = function() {
 	// Filter the list based on what's specified in the input box
     self.filterPlaces = ko.computed(function() {
         var filterCriteria = self.filterCriteria();
-       
+
         if (!filterCriteria || filterCriteria == "None") {
         	markersView.resetMarkers();
         	showInfoWindow.resetInfoWindows();
@@ -217,9 +225,9 @@ var markersListViewModel = function() {
             	}
             	else {
             		viewModel.updateVisibility(place, false);
-            		markersView.render();	
+            		markersView.render();
             	}
-    		});	
+    		});
         }
     }, self);
 
@@ -235,7 +243,7 @@ var markersListViewModel = function() {
 var showInfoWindow = {
 	render: function() {
 		var selectedPlace = viewModel.getSelectedPlace();
-		
+
 		// Values for Foursquare API calls
 		var fsBaseUrl = "https://api.foursquare.com/v2/venues/search";
 		var fsKey = "YE2KDPKG4FJ2XBHEARA4HZ3C35MYPJYHNQV5EXWWK4WU0NL3";
@@ -280,7 +288,7 @@ var showInfoWindow = {
 	    	var useDefault = true;
 	    	if(matchedPlace) useDefault = false;
 
-	    	// Set infoWindow details based upon what's available from API 
+	    	// Set infoWindow details based upon what's available from API
 	    	var infoPlaceName = matchedPlace.name ? matchedPlace.name : '';
 	    	var infoPlaceDesc = matchedPlace.categories[0].name ? matchedPlace.categories[0].name : '';
 	    	var infoPlaceAddress1 = matchedPlace.location.formattedAddress[0] ? matchedPlace.location.formattedAddress[0]  : '';
@@ -301,14 +309,14 @@ var showInfoWindow = {
 
 	    }
 
-		
+
 	},
 
 	// Close all infoWindows
 	resetInfoWindows: function() {
     	for (var i = 0; i < infoWindows.length; i++) {
           	infoWindows[i].close(map);
-        }	
+        }
     }
 
 }
