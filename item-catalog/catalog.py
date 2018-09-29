@@ -75,7 +75,7 @@ def newItem(category_name):
         name = request.form['name']
         category_name = request.form['catname']
         created_by_user = login_session['gplus_id']
-        print 'Adding new item: %s', name
+        print('Adding new item: %s', name)
 
         # If an Item name wasn't provided, don't create the item
         if name:
@@ -104,7 +104,7 @@ def editItem(category_name, item_id):
     elif request.method == 'POST':
         description = request.form['description']
         name = request.form['name']
-        print 'Updated Item information for: %s', name
+        print('Updated Item information for: %s', name)
 
         if item != []:
             item.description = description
@@ -143,7 +143,7 @@ def logout():
     # Log out the user and clear the session
     access_token = login_session.get('access_token')
     if access_token is None:
-        print 'Access Token is None'
+        print('Access Token is None')
         response = make_response(json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -207,7 +207,7 @@ def gconnect():
     if result['issued_to'] != client_id:
         response = make_response(
             json.dumps("Client IDs do not match"), 401)
-        print "Token's client ID does not match app's."
+        print("Token's client ID does not match app's.")
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -222,7 +222,7 @@ def gconnect():
     # Store the access token in the session for later use.
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
-    print 'Logged in as user %s', login_session['gplus_id']
+    print('Logged in as user %s', login_session['gplus_id'])
 
     # Get user info
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
