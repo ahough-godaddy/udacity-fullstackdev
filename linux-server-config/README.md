@@ -7,17 +7,20 @@ Private IP: 172.26.14.176
 Public IP: 54.201.96.204
 
 ## Connect to the Server via SSH
-1. Save the default private key on my local machine
+1. Save the default private key on my local machine and reduce permissions on the file
 2. SSH by providing the private key and the default ssh port
-  `ssh -i ~/.ssh/LightsailDefaultPrivateKey.pem ubuntu@54.201.96.204 -p 22`
+
+  `ssh -i ~/.ssh/LightsailDefaultPrivateKey.pem ubuntu@35.165.237.97 -p 22`
   
 
 ## Secure the Server
-3. Update all currently installed packages.
-4. Change the SSH port from 22 to 2200. Make sure to configure the Lightsail firewall to allow it.
-5. Configure the Uncomplicated Firewall (UFW) to only allow incoming connections for SSH (port 2200), HTTP (port 80), and NTP (port 123).
-
-Warning: When changing the SSH port, make sure that the firewall is open for port 2200 first, so that you don't lock yourself out of the server. When you change the SSH port, the Lightsail instance will no longer be accessible through the web app 'Connect using SSH' button. The button assumes the default port is being used. There are instructions on the same page for connecting from your terminal to the instance. Connect using those instructions and then follow the rest of the steps.
+1. Get list of packages with updates and update packages
+  sudo apt-get update
+  sudo apt-get upgrade
+2. Use UFW to open 3 new ports 2200, 80 and 123
+3. Modify the file `/etc/ssh/sshd_config` to change the SSH port from 22 to 2200. 
+4. Also update `PermitRootLogin` to be "no"
+5. Restart the SSH service
 
 Give grader access.
 In order for your project to be reviewed, the grader needs to be able to log in to your server.
