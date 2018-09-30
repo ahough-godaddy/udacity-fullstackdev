@@ -31,9 +31,14 @@ SSH Port: 2200
 5. Create an authorized_keys file in this directory and set the permissions to 644
 
 ## Prepare to Deploy the Web Application
-Configure the local timezone to UTC.
-10. Install and configure Apache to serve a Python mod_wsgi application.
+Verify that the timezone is set to UTC with the command `timedatectl status | grep "Time zone"`
 
+### Install and configure Apache
+1.  `sudo apt-get install apache2`
+2.  Verify Apache is running by browsing to http://35.165.237.97.xip.io/
+3. Check the version of Apache that's running `curl -sI localhost|grep Server`.  We're running 2.4.18.
+
+### serve a Python mod_wsgi application.
 If you built your project with Python 3, you will need to install the Python 3 mod_wsgi package on your server: sudo apt-get install libapache2-mod-wsgi-py3.
 11. Install and configure PostgreSQL:
 
@@ -44,3 +49,11 @@ Create a new database user named catalog that has limited permissions to your ca
 Deploy the Item Catalog project.
 13. Clone and setup your Item Catalog project from the Github repository you created earlier in this Nanodegree program.
 14. Set it up in your server so that it functions correctly when visiting your server’s IP address in a browser. Make sure that your .git directory is not publicly accessible via a browser!
+
+# References
+http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/
+https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
+https://www.bogotobogo.com/python/Flask/Python_Flask_HelloWorld_App_with_Apache_WSGI_Ubuntu14.php
+https://www.youtube.com/watch?v=wq0saslschw
+https://stackoverflow.com/questions/31870244/apache-webserver-and-flask-app
+http://terokarvinen.com/2016/deploy-flask-python3-on-apache2-ubuntu
