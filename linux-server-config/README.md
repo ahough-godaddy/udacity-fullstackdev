@@ -54,7 +54,7 @@ Deploy the Item Catalog project.
 14. Set it up in your server so that it functions correctly when visiting your server’s IP address in a browser. Make sure that your .git directory is not publicly accessible via a browser!
 
 # References
-http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/<p<
+http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/<p>
 https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
 https://www.bogotobogo.com/python/Flask/Python_Flask_HelloWorld_App_with_Apache_WSGI_Ubuntu14.php
 https://www.youtube.com/watch?v=wq0saslschw
