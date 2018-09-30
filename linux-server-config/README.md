@@ -5,6 +5,7 @@ Created via AWS Lightsail
 Server Information:
 Private IP: 172.26.14.176
 Public IP: 54.201.96.204
+SSH Port: 2200
 
 ## Connect to the Server via SSH
 1. Save the default private key on my local machine and reduce permissions on the file
@@ -22,15 +23,15 @@ Public IP: 54.201.96.204
 4. Also update `PermitRootLogin` to be "no"
 5. Restart the SSH service
 
-Give grader access.
-In order for your project to be reviewed, the grader needs to be able to log in to your server.
+## Give Grader Access
+1. Add the user 'grader'
+2. Create the file /etc/sudoers.d/grader to give grader sudo access
+3. Create an SSH key pair for grader using the ssh-keygen tool
+4. Make an .ssh directory for the grader user and set the permissions to 700
+5. Create an authorized_keys file in this directory and set the permissions to 644
 
-6. Create a new user account named grader.
-7. Give grader the permission to sudo.
-8. Create an SSH key pair for grader using the ssh-keygen tool.
-
-Prepare to deploy your project.
-9. Configure the local timezone to UTC.
+## Prepare to Deploy the Web Application
+Configure the local timezone to UTC.
 10. Install and configure Apache to serve a Python mod_wsgi application.
 
 If you built your project with Python 3, you will need to install the Python 3 mod_wsgi package on your server: sudo apt-get install libapache2-mod-wsgi-py3.
