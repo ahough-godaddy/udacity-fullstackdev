@@ -39,19 +39,22 @@ Verify that the timezone is set to UTC with the command `timedatectl status | gr
 3. Check the version of Apache that's running `curl -sI localhost|grep Server`.  We're running 2.4.18.
 
 ### serve a Python mod_wsgi application.
-If you built your project with Python 3, you will need to install the Python 3 mod_wsgi package on your server: sudo apt-get install libapache2-mod-wsgi-py3.
-11. Install and configure PostgreSQL:
+`sudo apt-get install`
+`libapache2-mod-wsgi python-dev`
+Install Git `sudo apt-get install git`
+
+
 
 Do not allow remote connections
 Create a new database user named catalog that has limited permissions to your catalog application database.
-12. Install git.
+
 
 Deploy the Item Catalog project.
 13. Clone and setup your Item Catalog project from the Github repository you created earlier in this Nanodegree program.
 14. Set it up in your server so that it functions correctly when visiting your server’s IP address in a browser. Make sure that your .git directory is not publicly accessible via a browser!
 
 # References
-http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/
+http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/<p<
 https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
 https://www.bogotobogo.com/python/Flask/Python_Flask_HelloWorld_App_with_Apache_WSGI_Ubuntu14.php
 https://www.youtube.com/watch?v=wq0saslschw
