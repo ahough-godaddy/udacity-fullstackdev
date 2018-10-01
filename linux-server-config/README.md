@@ -50,6 +50,7 @@ Verify that the timezone is set to UTC with the command `timedatectl status | gr
 3. Create and activate virtual environment
   `sudo virtualenv venv`
   `source venv/bin/activate`
+  `sudo chmod -R 777 venv`
 4. Download python dependencies
   `sudo pip install flask sqlalchemy oauth2client httplib2 passlib requests`
 5. Change the name of the application
@@ -68,9 +69,9 @@ Verify that the timezone is set to UTC with the command `timedatectl status | gr
 2. Create the Apache config file at /etc/apache2/sites-available/catalog.conf
   ```
   <VirtualHost *:80>
-    ServerName 54.27.39.133
-    WSGIDaemonProcess catalog python-path=/var/www/item-catalog:/var/www/item-catalog/venv/lib/python2.7/site-packages
-    WSGIProcessGroup catalog
+    ServerName 35.165.237.97.xip.io
+    WSGIDaemonProcess item-catalog python-path=/var/www/item-catalog:/var/www/item-catalog/venv/lib/python2.7/site-packages
+    WSGIProcessGroup item-catalog
     WSGIScriptAlias / /var/www/item-catalog/catalog.wsgi
     <Directory /var/www/item-catalog/>
         Order allow,deny
@@ -86,6 +87,9 @@ Verify that the timezone is set to UTC with the command `timedatectl status | gr
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
   ```
+  3.  Enable the new site configuration `sudo a2ensite catalog.conf`
+  4. Disable the default configuration `sudo a2dissite 000-default.conf`
+  5. Restart Apache
 
 Do not allow remote connections
 Create a new database user named catalog that has limited permissions to your catalog application database.
