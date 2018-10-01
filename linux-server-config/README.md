@@ -38,11 +38,23 @@ Verify that the timezone is set to UTC with the command `timedatectl status | gr
 2.  Verify Apache is running by browsing to http://35.165.237.97.xip.io/
 3. Check the version of Apache that's running `curl -sI localhost|grep Server`.  We're running 2.4.18.
 
-### serve a Python mod_wsgi application.
-`sudo apt-get install`
-`libapache2-mod-wsgi python-dev`
-Install Git `sudo apt-get install git`
+### Download the catalog project
+1.  Install mod_wsgi and python `sudo apt-get install libapache2-mod-wsgi python-dev`
+2. Install Git `sudo apt-get install git`
+3. Clone the item-catalog project into the /var/www/item-catalog directory
+4. Edit the catalog.py file so that the run command doesn't specify host or port
 
+### Set up a virtual environment and download project-specific dependencies
+1. Download pip utility for downloading python-specific dependencies `sudo apt-get install python-pip`
+2. Download virtualenv `sudo pip install virtualenv`
+3. Create and activate virtual environment
+  `sudo virtualenv venv`
+  `source venv/bin/activate`
+4. Download python dependencies
+  `sudo pip install Flask`
+  `sudo pip instal sqlalchemy oauth2client httplib2 passlib requests`
+5. Change the name of the application
+  
 
 
 Do not allow remote connections
@@ -55,8 +67,8 @@ Deploy the Item Catalog project.
 
 # References
 http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/<p>
-https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
-https://www.bogotobogo.com/python/Flask/Python_Flask_HelloWorld_App_with_Apache_WSGI_Ubuntu14.php
-https://www.youtube.com/watch?v=wq0saslschw
-https://stackoverflow.com/questions/31870244/apache-webserver-and-flask-app
-http://terokarvinen.com/2016/deploy-flask-python3-on-apache2-ubuntu
+https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps<p>
+https://www.bogotobogo.com/python/Flask/Python_Flask_HelloWorld_App_with_Apache_WSGI_Ubuntu14.php<p>
+https://www.youtube.com/watch?v=wq0saslschw<p>
+https://stackoverflow.com/questions/31870244/apache-webserver-and-flask-app<p>
+http://terokarvinen.com/2016/deploy-flask-python3-on-apache2-ubuntu<p>
