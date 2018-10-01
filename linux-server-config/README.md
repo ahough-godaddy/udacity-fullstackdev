@@ -43,6 +43,7 @@ Verify that the timezone is set to UTC with the command `timedatectl status | gr
 2. Install Git `sudo apt-get install git`
 3. Clone the item-catalog project into the /var/www/item-catalog directory
 4. Edit the catalog.py file so that the run command doesn't specify host or port and to put in the absolute path to the client_secrets.json file
+5. I removed the .git folder on accident while cleaning us some directories so I'm not able to block it from being publicly accessible via the browser.  However, I do know that I could use the htaccess file to block acess to this directory, if needed.
 
 ### Set up a virtual environment and download project-specific dependencies
 1. Download pip utility for downloading python-specific dependencies `sudo apt-get install python-pip`
@@ -91,13 +92,16 @@ Verify that the timezone is set to UTC with the command `timedatectl status | gr
   4. Disable the default configuration `sudo a2dissite 000-default.conf`
   5. Restart Apache
 
-Do not allow remote connections
-Create a new database user named catalog that has limited permissions to your catalog application database.
 
+## Set up the Database
+1. Install Postgresql package `sudo apt-get install postgresql python-psycopg2`
+2. Start a psql session
+3. Create a new database user named catalog `create user catalog with password 'thispassword';`
+4. Create the database `create database catalog;`
+5. Grant privileges to the catalog user `grant all privileges on database catalog to catalog;`
+6. Update the database scripts to use postgresql instead of sqlite
+7. If necessary disallow remote connection in the file /etc/postgresql/9.5/main/pg_hba.conf
 
-Deploy the Item Catalog project.
-13. Clone and setup your Item Catalog project from the Github repository you created earlier in this Nanodegree program.
-14. Set it up in your server so that it functions correctly when visiting your server’s IP address in a browser. Make sure that your .git directory is not publicly accessible via a browser!
 
 # References
 http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/<p>
