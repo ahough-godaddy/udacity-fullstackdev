@@ -1,10 +1,9 @@
 # Server Project
 
 ## Create a Linux Server Instance
-Created via AWS Lightsail
-Server Information:
-Private IP: 172.26.14.176
-Public IP: 54.201.96.204
+Created via AWS Lightsail<p>
+Server Information:<p>
+Public IP: 35.165.237.97<p>
 SSH Port: 2200
 
 ## Connect to the Server via SSH
