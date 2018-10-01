@@ -42,7 +42,7 @@ Verify that the timezone is set to UTC with the command `timedatectl status | gr
 1.  Install mod_wsgi and python `sudo apt-get install libapache2-mod-wsgi python-dev`
 2. Install Git `sudo apt-get install git`
 3. Clone the item-catalog project into the /var/www/item-catalog directory
-4. Edit the catalog.py file so that the run command doesn't specify host or port
+4. Edit the catalog.py file so that the run command doesn't specify host or port and to put in the absolute path to the client_secrets.json file
 
 ### Set up a virtual environment and download project-specific dependencies
 1. Download pip utility for downloading python-specific dependencies `sudo apt-get install python-pip`
@@ -51,11 +51,41 @@ Verify that the timezone is set to UTC with the command `timedatectl status | gr
   `sudo virtualenv venv`
   `source venv/bin/activate`
 4. Download python dependencies
-  `sudo pip install Flask`
-  `sudo pip instal sqlalchemy oauth2client httplib2 passlib requests`
+  `sudo pip install flask sqlalchemy oauth2client httplib2 passlib requests`
 5. Change the name of the application
   
+### Configure WSGI
+1.  Create the file /var/www/item-catalog/catalog.wsgi
+  ```
+  import sys
+  import logging
+  logging.basicConfig(stream=sys.stderr)
+  sys.path.insert(0, "/var/www/item-catalog")
 
+  from catalog import app as application
+  application.secret_key = 'secret'
+  ```
+2. Create the Apache config file at /etc/apache2/sites-available/catalog.conf
+  ```
+  <VirtualHost *:80>
+    ServerName 54.27.39.133
+    WSGIDaemonProcess catalog python-path=/var/www/item-catalog:/var/www/item-catalog/venv/lib/python2.7/site-packages
+    WSGIProcessGroup catalog
+    WSGIScriptAlias / /var/www/item-catalog/catalog.wsgi
+    <Directory /var/www/item-catalog/>
+        Order allow,deny
+        Allow from all
+    </Directory>
+    Alias /static /var/www/item-catalog/static
+    <Directory /var/www/item-catalog/static/>
+        Order allow,deny
+        Allow from all
+    </Directory>
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+  ```
 
 Do not allow remote connections
 Create a new database user named catalog that has limited permissions to your catalog application database.
