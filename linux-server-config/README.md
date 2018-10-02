@@ -3,8 +3,10 @@
 ## Create a Linux Server Instance
 Created via AWS Lightsail<p>
 Server Information:<p>
-Public IP: 35.165.237.97<p>
-SSH Port: 2200
+  URL to the application:  35.165.237.97.xip.io/catalog
+  Public IP: 35.165.237.97<p>
+  SSH Port: 2200
+
 
 ## Connect to the Server via SSH
 1. Save the default private key on my local machine and reduce permissions on the file
@@ -33,16 +35,17 @@ SSH Port: 2200
 Verify that the timezone is set to UTC with the command `timedatectl status | grep "Time zone"`
 
 ### Install and configure Apache
-1.  `sudo apt-get install apache2`
-2.  Verify Apache is running by browsing to http://35.165.237.97.xip.io/
+1. `sudo apt-get install apache2`
+2. Verify Apache is running by browsing to http://35.165.237.97.xip.io/
 3. Check the version of Apache that's running `curl -sI localhost|grep Server`.  We're running 2.4.18.
 
 ### Download the catalog project
-1.  Install mod_wsgi and python `sudo apt-get install libapache2-mod-wsgi python-dev`
+1. Install mod_wsgi and python `sudo apt-get install libapache2-mod-wsgi python-dev`
 2. Install Git `sudo apt-get install git`
-3. Clone the item-catalog project into the /var/www/item-catalog directory
+3. Clone the item-catalog project into the /var/www/item-catalog/ directory
 4. Edit the catalog.py file so that the run command doesn't specify host or port and to put in the absolute path to the client_secrets.json file
-5. I removed the .git folder on accident while cleaning us some directories so I'm not able to block it from being publicly accessible via the browser.  However, I do know that I could use the htaccess file to block acess to this directory, if needed.
+5. Update the request origin associated with the Google oauth client ID
+<p>NOTE:  I removed the .git folder on accident while cleaning us some directories so I'm not able to block it from being publicly accessible via the browser.  However, I do know that I could use the htaccess file to block acess to this directory, if needed.
 
 ### Set up a virtual environment and download project-specific dependencies
 1. Download pip utility for downloading python-specific dependencies `sudo apt-get install python-pip`
@@ -87,9 +90,9 @@ Verify that the timezone is set to UTC with the command `timedatectl status | gr
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
   ```
-  3.  Enable the new site configuration `sudo a2ensite catalog.conf`
-  4. Disable the default configuration `sudo a2dissite 000-default.conf`
-  5. Restart Apache
+3. Enable the new site configuration `sudo a2ensite catalog.conf`
+4. Disable the default configuration `sudo a2dissite 000-default.conf`
+5. Restart Apache
 
 
 ## Set up the Database
@@ -97,7 +100,7 @@ Verify that the timezone is set to UTC with the command `timedatectl status | gr
 2. Start a psql session
 3. Create a new database user named catalog `create user catalog with password 'thispassword';`
 4. Create the database `create database catalog;`
-5. Grant privileges to the catalog user `grant all privileges on database catalog to catalog;`
+5. Grant privileges to the catalog user `grant all privileges on database catalog to catalog;` I tried adding specific privleges here and received an error.
 6. Update the database scripts to use postgresql instead of sqlite
 7. If necessary disallow remote connection in the file /etc/postgresql/9.5/main/pg_hba.conf
 
