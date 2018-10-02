@@ -4,8 +4,8 @@
 Created via AWS Lightsail<p>
 Server Information:<p>
   URL to the application:  35.165.237.97.xip.io/catalog
-  Public IP: 35.165.237.97<p>
-  SSH Port: 2200
+  <p>Public IP: 35.165.237.97<p>
+  <p>SSH Port: 2200
 
 
 ## Connect to the Server via SSH
