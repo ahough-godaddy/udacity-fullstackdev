@@ -112,3 +112,6 @@ https://www.bogotobogo.com/python/Flask/Python_Flask_HelloWorld_App_with_Apache_
 https://www.youtube.com/watch?v=wq0saslschw<p>
 https://stackoverflow.com/questions/31870244/apache-webserver-and-flask-app<p>
 http://terokarvinen.com/2016/deploy-flask-python3-on-apache2-ubuntu<p>
+https://www.postgresql.org/docs/8.0/static/sql-createuser.html<p>
+https://docs.sqlalchemy.org/en/latest/core/engines.html<p>
+https://github.com/jupyterhub/jupyterhub/issues/74
